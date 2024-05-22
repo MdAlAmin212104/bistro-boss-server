@@ -32,10 +32,17 @@ async function run() {
       const reviewsCollection = client.db('bistroDB').collection('reviews');
       const cartsCollection = client.db('bistroDB').collection('carts');
 
+      app.get('/users', async (req, res) => {
+            const result = await userCollection.find().toArray()
+            res.send(result)
+      })
 
 
       app.post('/user', async (req, res) =>{
             const user = req.body
+            const query = { email : user.email}
+            const isExist = await userCollection.findOne(query);
+            if(isExist) return res.send(isExist)
             const result = await userCollection.insertOne(user);
             res.send(result)
       })
