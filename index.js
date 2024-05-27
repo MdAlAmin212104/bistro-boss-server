@@ -209,6 +209,16 @@ async function run() {
             })
       })
 
+
+      app.get('/payment/:email', async (req, res) => {
+            const query = {email: req.params.email}
+            if(req.params.email !== email.decoded.email){
+                  return res.status(403).send({message : 'forbidden access'});
+            }
+            const result = await paymentsCollection.find(query).toArray()
+            res.send(result)
+      })
+
       // send payment history intent
       app.post('/payment', async (req, res) => {
             const payment = req.body;
