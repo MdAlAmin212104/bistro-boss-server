@@ -233,6 +233,34 @@ async function run() {
             const deleteResult = await cartsCollection.deleteMany(query)
             res.send({paymentResult, deleteResult})
       })
+
+      //'stats or analytics
+      app.get('/admin-stats', verifyToken, verifyAdmin, async (req, res) => {
+            const users = await userCollection.estimatedDocumentCount();
+            const products = await menuCollection.estimatedDocumentCount();
+            const orders = await paymentsCollection.estimatedDocumentCount();
+
+            // this is not best way
+            // const payments = await paymentsCollection.find().toArray();
+            // const revenue = payments.reduce((total, payment)=> total + payment.price,0)
+
+            const revenueResult = await paymentsCollection.aggregate([
+                  {
+                        $group : {
+                              _id : null,
+                              totalRevenue : {$sum : '$price'}
+                        }
+                  }
+            ]).toArray()
+            const revenue = revenueResult.length > 0 ? revenueResult[0].totalRevenue : 0;
+
+            res.send({
+                  users,
+                  products,
+                  orders,
+                  revenue,
+            })
+      })
       
       // Send a ping to confirm a successful connection
       //await client.db("admin").command({ ping: 1 });
