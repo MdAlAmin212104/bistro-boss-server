@@ -207,21 +207,7 @@ async function run() {
 
     // send payment history intent
 
-    //     app.post("/payment", async (req, res) => {
-    //       const payment = req.body;
-    //       console.log(payment);
 
-    //       const paymentResult = await paymentsCollection.insertOne(payment);
-
-    //       const query = { _id :
-    //             {
-    //                   $in : payment.cartIds.map(id => new ObjectId(id))
-    //             },
-    //       }
-
-    //       const deleteResult = await cartsCollection.deleteMany(query)
-    //       res.send({paymentResult, deleteResult})
-    //     });
 
     app.post("/payment", async (req, res) => {
       const payment = req.body;
